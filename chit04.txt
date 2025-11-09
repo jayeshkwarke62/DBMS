@@ -1,0 +1,184 @@
+C:\Windows\system32>mysql -u root -p
+Enter password: ***********
+Welcome to the MySQL monitor.  Commands end with ; or , 
+Your MySQL connection id is 14
+Server version: 8.0.36 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> mysql -u root -p
+    -> ^C
+mysql> create database DBMS04;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> use DBMS04;
+Database changed
+mysql> create table course(course_id varchar(50) primary key, title varchar
+    -> ^C
+mysql> create table course(course_id varchar(50) primary key, title varchar(50),credits int);
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> CREATE TABLE instructor (
+    ->     T_ID INT PRIMARY KEY,
+    ->     name VARCHAR(50),
+    ->     dept_name VARCHAR(50),
+    ->     salary INT
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> CREATE TABLE student (
+    ->     S_ID INT PRIMARY KEY,
+    ->     name VARCHAR(50),
+    ->     dept_name VARCHAR(50),
+    ->     tot_cred INT);
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> INSERT INTO course VALUES
+    -> ('CS101', 'DBMS', 'Computer', 4),
+    -> ('CS102', 'Data Structures', 'Computer', 3),
+    -> ('EE101', 'Circuits', 'Electrical', 3),
+    -> ('ME101', 'Thermodynamics', 'Mechanical', 4);
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+mysql> drop table course;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> CREATE TABLE course (
+    ->     course_id VARCHAR(10) PRIMARY KEY,
+    ->     title VARCHAR(100),
+    ->     dept_name VARCHAR(50),
+    ->     credits INT
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> INSERT INTO course VALUES
+    -> ('CS101', 'DBMS', 'Computer', 4),
+    -> ('CS102', 'Data Structures', 'Computer', 3),
+    -> ('EE101', 'Circuits', 'Electrical', 3),
+    -> ('ME101', 'Thermodynamics', 'Mechanical', 4);
+Query OK, 4 rows affected (0.01 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO instructor VALUES
+    -> (101, 'Amol', 'Computer', 40000),
+    -> (102, 'Amit', 'Computer', 45000),
+    -> (103, 'Sneha', 'Electrical', 47000),
+    -> (104, 'Raj', 'Mechanical', 39000),
+    -> (105, 'Neha', 'Computer', 50000);
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO student VALUES
+    -> (1, 'Ram', 'Computer', 120, 'CS101'),
+    -> (2, 'Shyam', 'Electrical', 100, 'EE101'),
+    -> (3, 'Amar', 'Computer', 90, 'CS101'),
+    -> (4, 'Kamal', 'Computer', 80, 'CS101'),
+    -> (5, 'Ramesh', 'Mechanical', 95, 'ME101');
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+mysql> drop table student;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> CREATE TABLE student (
+    ->     S_ID INT PRIMARY KEY,
+    ->     name VARCHAR(50),
+    ->     dept_name VARCHAR(50),
+    ->     tot_cred INT,
+    ->     course_id VARCHAR(10),
+    ->     FOREIGN KEY (course_id) REFERENCES course(course_id)
+    -> );
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> INSERT INTO student VALUES
+    -> (1, 'Ram', 'Computer', 120, 'CS101'),
+    -> (2, 'Shyam', 'Electrical', 100, 'EE101'),
+    -> (3, 'Amar', 'Computer', 90, 'CS101'),
+    -> (4, 'Kamal', 'Computer', 80, 'CS101'),
+    -> (5, 'Ramesh', 'Mechanical', 95, 'ME101');
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> SELECT dept_name, AVG(salary) AS avg_salary
+    -> FROM instructor
+    -> GROUP BY dept_name
+    -> HAVING AVG(salary) > 42000;
++------------+------------+
+| dept_name  | avg_salary |
++------------+------------+
+| Computer   | 45000.0000 |
+| Electrical | 47000.0000 |
++------------+------------+
+2 rows in set (0.00 sec)
+
+mysql> UPDATE instructor
+    -> SET salary = salary * 1.10
+    -> WHERE dept_name = 'Computer';
+Query OK, 3 rows affected (0.01 sec)
+Rows matched: 3  Changed: 3  Warnings: 0
+
+mysql> desc instructor;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| T_ID      | int         | NO   | PRI | NULL    |       |
+| name      | varchar(50) | YES  |     | NULL    |       |
+| dept_name | varchar(50) | YES  |     | NULL    |       |
+| salary    | int         | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> select * from instructor;
++------+-------+------------+--------+
+| T_ID | name  | dept_name  | salary |
++------+-------+------------+--------+
+|  101 | Amol  | Computer   |  44000 |
+|  102 | Amit  | Computer   |  49500 |
+|  103 | Sneha | Electrical |  47000 |
+|  104 | Raj   | Mechanical |  39000 |
+|  105 | Neha  | Computer   |  55000 |
++------+-------+------------+--------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT name
+    -> FROM instructor
+    -> WHERE name NOT IN ('Amol', 'Amit');
++-------+
+| name  |
++-------+
+| Sneha |
+| Raj   |
+| Neha  |
++-------+
+3 rows in set (0.00 sec)
+
+mysql>  SELECT name
+    -> FROM student
+    -> WHERE name LIKE '%am%';
++--------+
+| name   |
++--------+
+| Ram    |
+| Shyam  |
+| Amar   |
+| Kamal  |
+| Ramesh |
++--------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT s.name
+    -> FROM student s
+    -> JOIN course c ON s.course_id = c.course_id
+    -> WHERE s.dept_name = 'Computer'
+    ->   AND c.title = 'DBMS';
++-------+
+| name  |
++-------+
+| Ram   |
+| Amar  |
+| Kamal |
++-------+
+3 rows in set (0.00 sec)

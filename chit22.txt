@@ -1,0 +1,112 @@
+Microsoft Windows [Version 10.0.19045.6332]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32>mongsh
+'mongsh' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\Windows\system32>mongosh
+Current Mongosh Log ID: 68ebe9388ec30ea1d0cebea3
+Connecting to:          mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.5.8
+Using MongoDB:          8.2.1
+Using Mongosh:          2.5.8
+
+For mongosh info see: https://www.mongodb.com/docs/mongodb-shell/
+
+------
+   The server generated these startup warnings when booting
+   2025-10-12T19:39:20.799+05:30: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
+------
+
+test> use mydatabase
+switched to db mydatabase
+mydatabase> db.orderinfo.insertMany([
+...   { cust_id: 123, cust_name: "abc", status: "A", price: 250 },
+...   { cust_id: 124, cust_name: "xyz", status: "B", price: 300 },
+...   { cust_id: 125, cust_name: "pqr", status: "A", price: 450 }
+... ]);
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('68ebe94c8ec30ea1d0cebea4'),
+    '1': ObjectId('68ebe94c8ec30ea1d0cebea5'),
+    '2': ObjectId('68ebe94c8ec30ea1d0cebea6')
+  }
+}
+mydatabase> db.orderinfo.find(
+...   { price: { $gte: 250, $lte: 450 } },
+...   { cust_name: 1, _id: 0 }
+... );
+[ { cust_name: 'abc' }, { cust_name: 'xyz' }, { cust_name: 'pqr' } ]
+mydatabase>
+
+mydatabase> db.orderinfo.updateOne(
+...   { cust_id: 123 },
+...   { $inc: { price: 10 } }
+... );
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+mydatabase>
+
+mydatabase> db.orderinfo.updateOne(
+...   { cust_id: 124 },
+...   { $inc: { price: -5 } }
+... );
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+mydatabase>
+
+mydatabase> db.orderinfo.updateMany(
+...   {},
+...   { $unset: { status: "" } }
+... );
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 3,
+  modifiedCount: 3,
+  upsertedCount: 0
+}
+mydatabase>
+
+mydatabase> db.orderinfo.find(
+...   { $or: [ { status: "A" }, { price: 250 } ] },
+...   { cust_name: 1, _id: 0 }
+... );
+
+mydatabase>
+
+mydatabase> db.orderinfo.find().pretty();
+[
+  {
+    _id: ObjectId('68ebe94c8ec30ea1d0cebea4'),
+    cust_id: 123,
+    cust_name: 'abc',
+    price: 260
+  },
+  {
+    _id: ObjectId('68ebe94c8ec30ea1d0cebea5'),
+    cust_id: 124,
+    cust_name: 'xyz',
+    price: 295
+  },
+  {
+    _id: ObjectId('68ebe94c8ec30ea1d0cebea6'),
+    cust_id: 125,
+    cust_name: 'pqr',
+    price: 450
+  }
+]
+mydatabase>
+
+

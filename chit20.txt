@@ -1,0 +1,220 @@
+Microsoft Windows [Version 10.0.19045.6332]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32>mongosh
+Current Mongosh Log ID: 68ebdae96e21f4fb25cebea3
+Connecting to:          mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.5.8
+Using MongoDB:          8.2.1
+Using Mongosh:          2.5.8
+
+For mongosh info see: https://www.mongodb.com/docs/mongodb-shell/
+
+------
+   The server generated these startup warnings when booting
+   2025-10-12T19:39:20.799+05:30: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
+------
+
+test> use collegeDB
+switched to db collegeDB
+collegeDB> db.createCollection("students");
+{ ok: 1 }
+collegeDB> db.students.insertMany([
+...   { Rollno: 1, name: "Navin", subject: "DMSA", marks: 78 },
+...   { Rollno: 2, name: "Anusha", subject: "OSD", marks: 75 },
+...   { Rollno: 3, name: "Ravi", subject: "TOC", marks: 69 },
+...   { Rollno: 4, name: "Veena", subject: "TOC", marks: 70 },
+...   { Rollno: 5, name: "Pravini", subject: "OSD", marks: 80 },
+...   { Rollno: 6, name: "Reena", subject: "DMSA", marks: 50 },
+...   { Rollno: 7, name: "Geeta", subject: "CN", marks: 90 },
+...   { Rollno: 8, name: "Akash", subject: "CN", marks: 85 }
+... ]);
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('68ebdafd6e21f4fb25cebea4'),
+    '1': ObjectId('68ebdafd6e21f4fb25cebea5'),
+    '2': ObjectId('68ebdafd6e21f4fb25cebea6'),
+    '3': ObjectId('68ebdafd6e21f4fb25cebea7'),
+    '4': ObjectId('68ebdafd6e21f4fb25cebea8'),
+    '5': ObjectId('68ebdafd6e21f4fb25cebea9'),
+    '6': ObjectId('68ebdafd6e21f4fb25cebeaa'),
+    '7': ObjectId('68ebdafd6e21f4fb25cebeab')
+  }
+}
+collegeDB>
+
+collegeDB> db.students.createIndex({ name: 1 });
+name_1
+collegeDB>
+
+collegeDB> db.students.createIndex({ subject: 1, marks: -1 });
+subject_1_marks_-1
+collegeDB>
+
+collegeDB> db.students.createIndex({ Rollno: 1 }, { unique: true });
+Rollno_1
+collegeDB>
+
+collegeDB> db.students.getIndexes();
+[
+  { v: 2, key: { _id: 1 }, name: '_id_' },
+  { v: 2, key: { name: 1 }, name: 'name_1' },
+  { v: 2, key: { subject: 1, marks: -1 }, name: 'subject_1_marks_-1' },
+  { v: 2, key: { Rollno: 1 }, name: 'Rollno_1', unique: true }
+]
+collegeDB>
+
+collegeDB> db.students.dropIndex({ name: 1 });
+{ nIndexesWas: 4, ok: 1 }
+collegeDB>
+
+collegeDB> db.students.aggregate([
+...   { $group: { _id: "$subject", MaxMarks: { $max: "$marks" } } }
+... ]);
+[
+  { _id: 'TOC', MaxMarks: 70 },
+  { _id: 'DMSA', MaxMarks: 78 },
+  { _id: 'OSD', MaxMarks: 80 },
+  { _id: 'CN', MaxMarks: 90 }
+]
+collegeDB>
+
+collegeDB> db.students.aggregate([
+...   { $group: { _id: "$subject", MinMarks: { $min: "$marks" } } }
+... ]);
+[
+  { _id: 'OSD', MinMarks: 75 },
+  { _id: 'DMSA', MinMarks: 50 },
+  { _id: 'TOC', MinMarks: 69 },
+  { _id: 'CN', MinMarks: 85 }
+]
+collegeDB>
+
+collegeDB> db.students.aggregate([
+...   { $group: { _id: "$subject", TotalMarks: { $sum: "$marks" } } }
+... ]);
+[
+  { _id: 'TOC', TotalMarks: 139 },
+  { _id: 'DMSA', TotalMarks: 128 },
+  { _id: 'OSD', TotalMarks: 155 },
+  { _id: 'CN', TotalMarks: 175 }
+]
+collegeDB>
+
+collegeDB> db.students.aggregate([
+...   { $group: { _id: "$subject", AvgMarks: { $avg: "$marks" } } }
+... ]);
+[
+  { _id: 'TOC', AvgMarks: 69.5 },
+  { _id: 'DMSA', AvgMarks: 64 },
+  { _id: 'OSD', AvgMarks: 77.5 },
+  { _id: 'CN', AvgMarks: 87.5 }
+]
+collegeDB>
+
+collegeDB> db.students.aggregate([
+...   { $sort: { subject: 1, Rollno: 1 } },
+...   { $group: { _id: "$subject", FirstRecord: { $first: "$$ROOT" } } }
+... ]);
+[
+  {
+    _id: 'OSD',
+    FirstRecord: {
+      _id: ObjectId('68ebdafd6e21f4fb25cebea5'),
+      Rollno: 2,
+      name: 'Anusha',
+      subject: 'OSD',
+      marks: 75
+    }
+  },
+  {
+    _id: 'CN',
+    FirstRecord: {
+      _id: ObjectId('68ebdafd6e21f4fb25cebeaa'),
+      Rollno: 7,
+      name: 'Geeta',
+      subject: 'CN',
+      marks: 90
+    }
+  },
+  {
+    _id: 'DMSA',
+    FirstRecord: {
+      _id: ObjectId('68ebdafd6e21f4fb25cebea4'),
+      Rollno: 1,
+      name: 'Navin',
+      subject: 'DMSA',
+      marks: 78
+    }
+  },
+  {
+    _id: 'TOC',
+    FirstRecord: {
+      _id: ObjectId('68ebdafd6e21f4fb25cebea6'),
+      Rollno: 3,
+      name: 'Ravi',
+      subject: 'TOC',
+      marks: 69
+    }
+  }
+]
+collegeDB>
+
+collegeDB> db.students.aggregate([
+...   { $sort: { subject: 1, Rollno: 1 } },
+...   { $group: { _id: "$subject", LastRecord: { $last: "$$ROOT" } } }
+... ]);
+[
+  {
+    _id: 'TOC',
+    LastRecord: {
+      _id: ObjectId('68ebdafd6e21f4fb25cebea7'),
+      Rollno: 4,
+      name: 'Veena',
+      subject: 'TOC',
+      marks: 70
+    }
+  },
+  {
+    _id: 'DMSA',
+    LastRecord: {
+      _id: ObjectId('68ebdafd6e21f4fb25cebea9'),
+      Rollno: 6,
+      name: 'Reena',
+      subject: 'DMSA',
+      marks: 50
+    }
+  },
+  {
+    _id: 'CN',
+    LastRecord: {
+      _id: ObjectId('68ebdafd6e21f4fb25cebeab'),
+      Rollno: 8,
+      name: 'Akash',
+      subject: 'CN',
+      marks: 85
+    }
+  },
+  {
+    _id: 'OSD',
+    LastRecord: {
+      _id: ObjectId('68ebdafd6e21f4fb25cebea8'),
+      Rollno: 5,
+      name: 'Pravini',
+      subject: 'OSD',
+      marks: 80
+    }
+  }
+]
+collegeDB>
+
+collegeDB> db.students.aggregate([
+...   { $group: { _id: "$subject", Count: { $sum: 1 } } }
+... ]);
+[
+  { _id: 'CN', Count: 2 },
+  { _id: 'OSD', Count: 2 },
+  { _id: 'DMSA', Count: 2 },
+  { _id: 'TOC', Count: 2 }
+]
+collegeDB>

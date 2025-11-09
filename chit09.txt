@@ -1,0 +1,79 @@
+Microsoft Windows [Version 10.0.19045.6332]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32>mongosh
+Current Mongosh Log ID: 68ebbcc2022735484ecebea3
+Connecting to:          mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.5.8
+Using MongoDB:          8.2.1
+Using Mongosh:          2.5.8
+
+For mongosh info see: https://www.mongodb.com/docs/mongodb-shell/
+
+------
+   The server generated these startup warnings when booting
+   2025-10-12T19:39:20.799+05:30: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
+------
+
+test> use mydb
+switched to db mydb
+mydb> db.orderinfo.insertMany([
+... {cust_id:123, cust_name: "abc", status: "A", price: 250 },
+mydb> db.orderinfo.insertMany([
+... {cust_id:123, cust_name: "abc", status: "A", price: 250 },{cust_id: 124, cust_name: "xyz", status: "A", price: 500 },{cust_id:125, cust_name: "pqr", status: "B", price: 800 },{cust_id:126, cust_name: "mnp", status: "A", price: 1000 } ])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('68ebbda4022735484ecebea4'),
+    '1': ObjectId('68ebbda4022735484ecebea5'),
+    '2': ObjectId('68ebbda4022735484ecebea6'),
+    '3': ObjectId('68ebbda4022735484ecebea7')
+  }
+}
+mydb> db.orderinfo.aggregate([
+... {$match: {status:"A"}),{$group: {_id: "$cust_id", avg_price: {$avg: "$price"}}} ])
+Uncaught:
+SyntaxError: Unexpected token, expected "," (2:21)
+
+  1 | db.orderinfo.aggregate([
+> 2 | {$match: {status:"A"}),{$group: {_id: "$cust_id", avg_price: {$avg: "$price"}}} ])
+    |                      ^
+  3 |
+
+mydb> db.orderinfo.aggregate([ {$match: {status:"A"}},{$group: {_id: "$cust_id", avg_price: {$avg: "$price"}}} ])
+[
+  { _id: 126, avg_price: 1000 },
+  { _id: 123, avg_price: 250 },
+  { _id: 124, avg_price: 500 }
+]
+mydb> db.orderinfo.find({price:{$gt:100,$lt:1000}},{status:1,_id:0})
+[ { status: 'A' }, { status: 'A' }, { status: 'B' } ]
+mydb> db.orderinfo.find
+[Function: find] AsyncFunction {
+  returnsPromise: true,
+  apiVersions: [ 1, Infinity ],
+  returnType: 'Cursor',
+  serverVersions: [ '0.0.0', '999.999.999' ],
+  topologies: [ 'ReplSet', 'Sharded', 'LoadBalanced', 'Standalone' ],
+  deprecated: false,
+  platforms: [ 'Compass', 'Browser', 'CLI' ],
+  isDirectShellCommand: false,
+  acceptsRawInput: false,
+  shellCommandCompleter: undefined,
+  newShellCommandCompleter: undefined,
+  help: [Function (anonymous)] Help
+}
+mydb> db.orderinfo.find({},{_id:0})
+[
+  { cust_id: 123, cust_name: 'abc', status: 'A', price: 250 },
+  { cust_id: 124, cust_name: 'xyz', status: 'A', price: 500 },
+  { cust_id: 125, cust_name: 'pqr', status: 'B', price: 800 },
+  { cust_id: 126, cust_name: 'mnp', status: 'A', price: 1000 }
+]
+mydb> db.orderinfo.createIndex({cust_id:1})
+cust_id_1
+mydb> db.orderinfo.getIndexes()
+[
+  { v: 2, key: { _id: 1 }, name: '_id_' },
+  { v: 2, key: { cust_id: 1 }, name: 'cust_id_1' }
+]
+mydb>

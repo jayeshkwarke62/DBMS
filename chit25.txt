@@ -1,0 +1,235 @@
+Microsoft Windows [Version 10.0.19045.6332]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32>mysql -u root -p
+Enter password: ***********
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 10
+Server version: 8.0.36 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> create table company;
+ERROR 1046 (3D000): No database selected
+mysql> create database company;
+ERROR 1007 (HY000): Can't create database 'company'; database exists
+mysql> create database company1;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> use company1;
+Database changed
+mysql> CREATE TABLE Empl (
+    ->     e_no INT PRIMARY KEY,
+    ->     e_name VARCHAR(50),
+    ->     post VARCHAR(50),
+    ->     pay_rate DECIMAL(10,2)
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> CREATE TABLE Position (
+    ->     pos_no INT PRIMARY KEY,
+    ->     post VARCHAR(50)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> CREATE TABLE Duty_alloc (
+    ->     pos_no INT,
+    ->     e_no INT,
+    ->     month VARCHAR(20),
+    ->     year INT,
+    ->     shift INT,
+    ->     FOREIGN KEY (pos_no) REFERENCES Position(pos_no),
+    ->     FOREIGN KEY (e_no) REFERENCES Empl(e_no)
+    -> );
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Position(pos_no),
+    FOREIGN KEY (e_no) REFERENCES Empl(e_no)
+)' at line 7
+mysql> CREATE TABLE Duty_alloc (
+    ->     pos_no INT,
+    ->     e_no INT,
+    ->     month VARCHAR(20),
+    ->     year INT,
+    ->     shift INT,
+    ->     FOREIGN KEY (pos_no) REFERENCES `Position`(pos_no),
+    ->     FOREIGN KEY (e_no) REFERENCES Empl(e_no)
+    -> );
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> SHOW TABLES;
++--------------------+
+| Tables_in_company1 |
++--------------------+
+| duty_alloc         |
+| empl               |
+| position           |
++--------------------+
+3 rows in set (0.01 sec)
+
+mysql> DESC Empl;
++----------+---------------+------+-----+---------+-------+
+| Field    | Type          | Null | Key | Default | Extra |
++----------+---------------+------+-----+---------+-------+
+| e_no     | int           | NO   | PRI | NULL    |       |
+| e_name   | varchar(50)   | YES  |     | NULL    |       |
+| post     | varchar(50)   | YES  |     | NULL    |       |
+| pay_rate | decimal(10,2) | YES  |     | NULL    |       |
++----------+---------------+------+-----+---------+-------+
+4 rows in set (0.02 sec)
+
+mysql> DESC Position;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| pos_no | int         | NO   | PRI | NULL    |       |
+| post   | varchar(50) | YES  |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+2 rows in set (0.01 sec)
+
+mysql> DESC Duty_alloc;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| pos_no | int         | YES  | MUL | NULL    |       |
+| e_no   | int         | YES  | MUL | NULL    |       |
+| month  | varchar(20) | YES  |     | NULL    |       |
+| year   | int         | YES  |     | NULL    |       |
+| shift  | int         | YES  |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> INSERT INTO Empl VALUES
+    -> (101, 'Sachin', 'Manager', 60000),
+    -> (102, 'Ravi', 'Engineer', 40000),
+    -> (103, 'Priya', 'Clerk', 25000),
+    -> (104, 'Neha', 'Manager', 62000),
+    -> (123, 'Amit', 'Technician', 35000);
+Query OK, 5 rows affected (0.00 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Position VALUES
+    -> (1, 'Manager'),
+    -> (2, 'Engineer'),
+    -> (3, 'Clerk'),
+    -> (4, 'Technician');
+Query OK, 4 rows affected (0.01 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Duty_alloc VALUES
+    -> (4, 123, 'April', 2003, 1),
+    -> (1, 101, 'May', 2003, 2),
+    -> (1, 104, 'April', 2003, 1),
+    -> (2, 102, 'April', 2003, 2);
+Query OK, 4 rows affected (0.01 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM Empl;
++------+--------+------------+----------+
+| e_no | e_name | post       | pay_rate |
++------+--------+------------+----------+
+|  101 | Sachin | Manager    | 60000.00 |
+|  102 | Ravi   | Engineer   | 40000.00 |
+|  103 | Priya  | Clerk      | 25000.00 |
+|  104 | Neha   | Manager    | 62000.00 |
+|  123 | Amit   | Technician | 35000.00 |
++------+--------+------------+----------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Position;
++--------+------------+
+| pos_no | post       |
++--------+------------+
+|      1 | Manager    |
+|      2 | Engineer   |
+|      3 | Clerk      |
+|      4 | Technician |
++--------+------------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Duty_alloc;
++--------+------+-------+------+-------+
+| pos_no | e_no | month | year | shift |
++--------+------+-------+------+-------+
+|      4 |  123 | April | 2003 |     1 |
+|      1 |  101 | May   | 2003 |     2 |
+|      1 |  104 | April | 2003 |     1 |
+|      2 |  102 | April | 2003 |     2 |
++--------+------+-------+------+-------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT *
+    -> FROM Duty_alloc
+    -> WHERE e_no = 123
+    ->   AND shift = 1
+    ->   AND month = 'April'
+    ->   AND year = 2003;
++--------+------+-------+------+-------+
+| pos_no | e_no | month | year | shift |
++--------+------+-------+------+-------+
+|      4 |  123 | April | 2003 |     1 |
++--------+------+-------+------+-------+
+1 row in set (0.00 sec)
+
+mysql> SELECT *
+    -> FROM Empl
+    -> WHERE pay_rate >= (
+    ->     SELECT pay_rate
+    ->     FROM Empl
+    ->     WHERE e_name = 'Sachin'
+    -> );
++------+--------+---------+----------+
+| e_no | e_name | post    | pay_rate |
++------+--------+---------+----------+
+|  101 | Sachin | Manager | 60000.00 |
+|  104 | Neha   | Manager | 62000.00 |
++------+--------+---------+----------+
+2 rows in set (0.00 sec)
+
+mysql> CREATE VIEW post_salary_summary AS
+    -> SELECT post,
+    ->        MIN(pay_rate) AS min_salary,
+    ->        MAX(pay_rate) AS max_salary,
+    ->        AVG(pay_rate) AS avg_salary
+    -> FROM Empl
+    -> GROUP BY post;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> SELECT * FROM post_salary_summary;
++------------+------------+------------+--------------+
+| post       | min_salary | max_salary | avg_salary   |
++------------+------------+------------+--------------+
+| Manager    |   60000.00 |   62000.00 | 61000.000000 |
+| Engineer   |   40000.00 |   40000.00 | 40000.000000 |
+| Clerk      |   25000.00 |   25000.00 | 25000.000000 |
+| Technician |   35000.00 |   35000.00 | 35000.000000 |
++------------+------------+------------+--------------+
+4 rows in set (0.01 sec)
+
+mysql> SELECT D.shift,
+    ->        COUNT(DISTINCT D.e_no) AS employee_count
+    -> FROM Duty_alloc D
+    -> JOIN Position P ON D.pos_no = P.pos_no
+    -> JOIN Empl E ON D.e_no = E.e_no
+    -> WHERE E.post = 'Manager'
+    -> GROUP BY D.shift;
++-------+----------------+
+| shift | employee_count |
++-------+----------------+
+|     1 |              1 |
+|     2 |              1 |
++-------+----------------+
+2 rows in set (0.00 sec)
+
+mysql> SHOW FULL TABLES WHERE TABLE_TYPE = 'VIEW';
++---------------------+------------+
+| Tables_in_company1  | Table_type |
++---------------------+------------+
+| post_salary_summary | VIEW       |
++---------------------+------------+
+1 row in set (0.00 sec)
+

@@ -1,0 +1,114 @@
+Microsoft Windows [Version 10.0.19045.6332]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32>mongosh
+Current Mongosh Log ID: 68ebcf2676fe035ba4cebea3
+Connecting to:          mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.5.8
+Using MongoDB:          8.2.1
+Using Mongosh:          2.5.8
+
+For mongosh info see: https://www.mongodb.com/docs/mongodb-shell/
+
+------
+   The server generated these startup warnings when booting
+   2025-10-12T19:39:20.799+05:30: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
+------
+
+test> use department
+switched to db department
+department> db.teacher.insertMany([
+...   { name: "Alice", department: "Computer Science", experience: 5, salary: 60000 },
+...   { name: "Bob", department: "Computer Science", experience: 8, salary: 75000 },
+...   { name: "Carol", department: "Mathematics", experience: 10, salary: 70000 },
+...   { name: "David", department: "Mathematics", experience: 6, salary: 65000 },
+...   { name: "Eve", department: "Physics", experience: 12, salary: 80000 },
+...   { name: "Frank", department: "Physics", experience: 3, salary: 55000 }
+... ])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('68ebcf3676fe035ba4cebea4'),
+    '1': ObjectId('68ebcf3676fe035ba4cebea5'),
+    '2': ObjectId('68ebcf3676fe035ba4cebea6'),
+    '3': ObjectId('68ebcf3676fe035ba4cebea7'),
+    '4': ObjectId('68ebcf3676fe035ba4cebea8'),
+    '5': ObjectId('68ebcf3676fe035ba4cebea9')
+  }
+}
+...   {
+...     $group: {
+...       _id: "$department",
+...       avgSalary: { $avg: "$salary" }
+...     }
+...   }
+... ])
+[
+  { _id: 'Mathematics', avgSalary: 67500 },
+  { _id: 'Computer Science', avgSalary: 67500 },
+  { _id: 'Physics', avgSalary: 67500 }
+]
+department>
+
+department>
+
+department> db.teacher.aggregate([
+...   {
+...     $group: {
+...       _id: "$department",
+...       avgSalary: { $avg: "$salary" }
+...     }
+...   }
+... ])
+[
+  { _id: 'Mathematics', avgSalary: 67500 },
+  { _id: 'Computer Science', avgSalary: 67500 },
+  { _id: 'Physics', avgSalary: 67500 }
+]
+department>
+
+department>
+
+department> db.teacher.aggregate([
+...   {
+...     $group: {
+...       _id: "$department",
+...       totalEmployees: { $sum: 1 }
+...     }
+...   }
+... ])
+[
+  { _id: 'Mathematics', totalEmployees: 2 },
+  { _id: 'Computer Science', totalEmployees: 2 },
+  { _id: 'Physics', totalEmployees: 2 }
+]
+department>
+
+department>
+
+department> db.teacher.aggregate([
+...   {
+...     $group: {
+...       _id: "$department",
+...       minSalary: { $min: "$salary" }
+...     }
+...   }
+... ])
+[
+  { _id: 'Physics', minSalary: 55000 },
+  { _id: 'Computer Science', minSalary: 60000 },
+  { _id: 'Mathematics', minSalary: 65000 }
+]
+department>
+
+department>
+
+department> db.teacher.createIndex({ department: 1 })
+department_1
+department> db.teacher.getIndexes()
+[
+  { v: 2, key: { _id: 1 }, name: '_id_' },
+  { v: 2, key: { department: 1 }, name: 'department_1' }
+]
+department> db.teacher.dropIndex({ department: 1 })
+{ nIndexesWas: 2, ok: 1 }
+department>

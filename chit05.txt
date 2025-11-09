@@ -1,0 +1,110 @@
+Microsoft Windows [Version 10.0.19045.6332]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32>mysql -u root -p
+Enter password: ***********
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 12
+Server version: 8.0.36 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> create database dbms05;
+ERROR 1007 (HY000): Can't create database 'dbms05'; database exists
+mysql> create database dbms5;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> use dbms5;
+Database changed
+mysql> CREATE TABLE O_RollCall (
+    ->     RollNo NUMBER PRIMARY KEY,
+    ->     Name VARCHAR2(50)
+    -> );
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'NUMBER PRIMARY KEY,
+    Name VARCHAR2(50)
+)' at line 2
+mysql>
+mysql> CREATE TABLE O_RollCall (
+    ->     RollNo INT PRIMARY KEY,
+    ->     Name VARCHAR(50)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> CREATE TABLE N_RollCall (
+    ->     RollNo NUMBER PRIMARY KEY,
+    ->     Name VARCHAR2(50)
+    ->     Name VARCHAR2(50)^C
+mysql> CREATE TABLE N_RollCall (
+    ->     RollNo INT PRIMARY KEY,
+    ->     Name VARCHAR(50)
+    -> );
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> INSERT INTO O_RollCall VALUES (1, 'Rohan');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO O_RollCall VALUES (2, 'Priya');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO O_RollCall VALUES (3, 'Madhura');
+Query OK, 1 row affected (0.01 sec)
+
+mysql>
+mysql> INSERT INTO N_RollCall VALUES (2, 'Priya');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO N_RollCall VALUES (3, 'Madhura');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO N_RollCall VALUES (4, 'Anita');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO N_RollCall VALUES (5, 'Rahul');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> DELIMITER $$
+mysql> CREATE PROCEDURE MergeRollCall()
+    -> begin
+    ->     DECLARE done INT DEFAULT FALSE;
+    ->
+    -> DECLARE v_RollNo INT;    DECLARE v_Name VARCHAR(50);
+    ->     DECLARE cur_N CURSOR FOR
+    ->         SELECT RollNo, Name FROM N_RollCall;
+    ->     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+    ->     OPEN cur_N;
+    ->     read_loop: LOOP
+    ->         FETCH cur_N INTO v_RollNo, v_Name;
+    ->         IF done THEN
+    ->             LEAVE read_loop;
+    ->         END IF;
+    ->         IF NOT EXISTS (SELECT 1 FROM O_RollCall WHERE RollNo = v_RollNo) THEN
+    ->             INSERT INTO O_RollCall (RollNo, Name)
+    ->             VALUES (v_RollNo, v_Name);
+    -> end if;
+    -> end loop;
+    -> close cur_N;
+    -> end $$
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> DELIMITER ;
+mysql>
+mysql> CALL MergeRollCall();
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> SELECT * FROM O_RollCall;
++--------+---------+
+| RollNo | Name    |
++--------+---------+
+|      1 | Rohan   |
+|      2 | Priya   |
+|      3 | Madhura |
+|      4 | Anita   |
+|      5 | Rahul   |
++--------+---------+
+5 rows in set (0.00 sec)

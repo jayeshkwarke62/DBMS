@@ -1,0 +1,95 @@
+Microsoft Windows [Version 10.0.19045.6332]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32>mysql -u root -p
+Enter password: ***********
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 27
+Server version: 8.0.36 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> create database dbms11;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> use dbms11;
+Database changed
+mysql> create table libaudit(roll_no int primary key, book_name varchar(20));
+Query OK, 0 rows affected (0.05 sec)
+
+mysql>  insert into libaudit values(4,"HCI");
+Query OK, 1 row affected (0.01 sec)
+
+mysql>  insert into libaudit values(12,"SPOS");
+Query OK, 1 row affected (0.01 sec)
+
+mysql>  insert into libaudit values(18,"DBMS");
+Query OK, 1 row affected (0.00 sec)
+
+mysql>  insert into libaudit values(19,"CNS");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> describe libaudit;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| roll_no   | int         | NO   | PRI | NULL    |       |
+| book_name | varchar(20) | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+2 rows in set (0.01 sec)
+
+mysql>  select * from libaudit;
++---------+-----------+
+| roll_no | book_name |
++---------+-----------+
+|       4 | HCI       |
+|      12 | SPOS      |
+|      18 | DBMS      |
+|      19 | CNS       |
++---------+-----------+
+4 rows in set (0.00 sec)
+
+mysql>  delimiter /
+mysql> create trigger libtrig before delete on libaudit for each row
+    -> begin
+    -> insert into libaudit1 values(old.roll_no, old.book_name);
+    -> end/
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> create table libaudit1(roll_no int primary key, book_name varchar(20));
+    -> ^C
+mysql> create table libaudit1(roll_no int primary key, book_name varchar(20));
+    -> ^C
+mysql> delimiter ;
+mysql> create table libaudit1(roll_no int primary key, book_name varchar(20));
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> desc libaudit1;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| roll_no   | int         | NO   | PRI | NULL    |       |
+| book_name | varchar(20) | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> delete from libaudit where roll_no=19;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from libaudit;
++---------+-----------+
+| roll_no | book_name |
++---------+-----------+
+|       4 | HCI       |
+|      12 | SPOS      |
+|      18 | DBMS      |
++---------+-----------+
+3 rows in set (0.00 sec)
+
+mysql>

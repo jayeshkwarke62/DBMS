@@ -1,0 +1,124 @@
+Microsoft Windows [Version 10.0.19045.6332]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32>mysql -u root -p
+Enter password: ************
+ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)
+
+C:\Windows\system32>mysql -u root -p
+Enter password: ***********
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 25
+Server version: 8.0.36 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> create database DBMS05;
+ERROR 1007 (HY000): Can't create database 'dbms05'; database exists
+mysql> create database DBMS05function;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> use DBMS05function;
+Database changed
+mysql> create table stud_marks(rollno int primary key,tot_marks int);
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> create table result(rollno int,grade varchar(10),foreign key(rollno) references stud_marks(rollno));
+Query OK, 0 rows affected (0.16 sec)
+
+mysql>  insert into stud_marks values(20,1200),(21,790),(22,988),(23,888);
+Query OK, 4 rows affected (0.01 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> select * from stud_marks
+    -> ^C
+mysql> select * from stud_marks;
++--------+-----------+
+| rollno | tot_marks |
++--------+-----------+
+|     20 |      1200 |
+|     21 |       790 |
+|     22 |       988 |
+|     23 |       888 |
++--------+-----------+
+4 rows in set (0.00 sec)
+
+mysql>  create function grade1(rolln int) returns integer deterministic
+    -> begin
+    -> declare marks int;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+mysql> delimiter ;
+mysql>  create function grade1(rolln int) returns integer deterministic
+    -> begin
+    -> declare marks int;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+mysql> delimiter /
+mysql>  create function grade1(rolln int) returns integer deterministic
+    -> begin
+    -> declare marks int;
+    -> select tot_marks into marks from stud_marks where rollno=rolln;
+    -> if marks>=825 and marks<900 then
+    -> insert into result values(rolln,'HSC');
+    -> elseif marks>=900 and marks<990 then
+    -> insert into result values(rolln,'FC');
+    -> elseif marks>990 then
+    -> insert into result values(rolln,'Dist');
+    -> else
+    -> insert into result values(rolln,'SC');
+    -> end if;
+    -> return 1000;
+    -> end/
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> delimiter ;
+mysql> select grade1(20);
++------------+
+| grade1(20) |
++------------+
+|       1000 |
++------------+
+1 row in set (0.01 sec)
+
+mysql> select grade1(21);
++------------+
+| grade1(21) |
++------------+
+|       1000 |
++------------+
+1 row in set (0.00 sec)
+
+mysql> select grade1(22);
++------------+
+| grade1(22) |
++------------+
+|       1000 |
++------------+
+1 row in set (0.02 sec)
+
+mysql> select grade1(23);
++------------+
+| grade1(23) |
++------------+
+|       1000 |
++------------+
+1 row in set (0.01 sec)
+
+mysql> select * from result;
++--------+-------+
+| rollno | grade |
++--------+-------+
+|     20 | Dist  |
+|     21 | SC    |
+|     22 | FC    |
+|     23 | HSC   |
++--------+-------+
+4 rows in set (0.00 sec)
+
+mysql>
+

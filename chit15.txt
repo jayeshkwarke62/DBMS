@@ -1,0 +1,565 @@
+Microsoft Windows [Version 10.0.19045.6332]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32>mongosh
+Current Mongosh Log ID: 68ebca7f114ad7cda4cebea3
+Connecting to:          mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.5.8
+Using MongoDB:          8.2.1
+Using Mongosh:          2.5.8
+
+For mongosh info see: https://www.mongodb.com/docs/mongodb-shell/
+
+------
+   The server generated these startup warnings when booting
+   2025-10-12T19:39:20.799+05:30: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
+------
+
+test> use Institute
+switched to db Institute
+Institute> db.createCollection("Students")
+{ ok: 1 }
+Institute> db.Students.insertMany([
+...   {
+...     RollNo: 1,
+...     StudentName: "Amit Sharma",
+...     Age: 16,
+...     Branch: "Mechanical",
+...     Address: { City: "Pune", State: "Maharashtra" },
+...     Hobbies: ["Cricket", "Music"]
+...   },
+...   {
+...     RollNo: 2,
+...     StudentName: "Priya Deshmukh",
+...     Age: 14,
+...     Branch: "Computer",
+...     Address: { City: "Mumbai", State: "Maharashtra" },
+...     Hobbies: ["Reading", "Dancing"]
+...   },
+...   {
+...     RollNo: 3,
+...     StudentName: "Rohit Patil",
+...     Age: 17,
+...     Branch: "Electrical",
+...     Address: { City: "Nashik", State: "Maharashtra" },
+...     Hobbies: ["Football", "Gaming"]
+...   },
+...   {
+...     RollNo: 4,
+...     StudentName: "Anjali Gupta",
+...     Age: 18,
+...     Branch: "Computer",
+...     Address: { City: "Pune", State: "Maharashtra" },
+...     Hobbies: ["Singing", "Drawing"]
+...   },
+...   {
+...     RollNo: 5,
+...     StudentName: "Suresh Kumar",
+...     Age: 15,
+...     Branch: "Civil",
+...     Address: { City: "Delhi", State: "Delhi" },
+...     Hobbies: ["Reading", "Chess"]
+...   },
+...   {
+...     RollNo: 6,
+...     StudentName: "Neha Singh",
+...     Age: 17,
+...     Branch: "Computer",
+...     Address: { City: "Pune", State: "Maharashtra" },
+...     Hobbies: ["Dancing", "Traveling"]
+...   },
+...   {
+...     RollNo: 7,
+...     StudentName: "Akash Mehta",
+...     Age: 16,
+...     Branch: "IT",
+...     Address: { City: "Nagpur", State: "Maharashtra" },
+...     Hobbies: ["Gaming", "Movies"]
+...   },
+...   {
+...     RollNo: 8,
+...     StudentName: "Riya Kulkarni",
+...     Age: 18,
+...     Branch: "Computer",
+...     Address: { City: "Pune", State: "Maharashtra" },
+...     Hobbies: ["Reading", "Painting"]
+...   },
+...   {
+...     RollNo: 9,
+...     StudentName: "Deepak Yadav",
+...     Age: 14,
+...     Branch: "Civil",
+...     Address: { City: "Aurangabad", State: "Maharashtra" },
+...     Hobbies: ["Swimming", "Running"]
+...   },
+...   {
+...     RollNo: 10,
+...     StudentName: "Aarav Joshi",
+...     Age: 19,
+...     Branch: "Mechanical",
+...     Address: { City: "Pune", State: "Maharashtra" },
+...     Hobbies: ["Cricket", "Cooking"]
+...   }
+... ])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('68ebcad9114ad7cda4cebea4'),
+    '1': ObjectId('68ebcad9114ad7cda4cebea5'),
+    '2': ObjectId('68ebcad9114ad7cda4cebea6'),
+    '3': ObjectId('68ebcad9114ad7cda4cebea7'),
+    '4': ObjectId('68ebcad9114ad7cda4cebea8'),
+    '5': ObjectId('68ebcad9114ad7cda4cebea9'),
+    '6': ObjectId('68ebcad9114ad7cda4cebeaa'),
+    '7': ObjectId('68ebcad9114ad7cda4cebeab'),
+    '8': ObjectId('68ebcad9114ad7cda4cebeac'),
+    '9': ObjectId('68ebcad9114ad7cda4cebead')
+  }
+}
+Institute> db.Students.find().pretty()
+[
+  {
+    _id: ObjectId('68ebcad9114ad7cda4cebea4'),
+    RollNo: 1,
+    StudentName: 'Amit Sharma',
+    Age: 16,
+    Branch: 'Mechanical',
+    Address: { City: 'Pune', State: 'Maharashtra' },
+    Hobbies: [ 'Cricket', 'Music' ]
+  },
+  {
+    _id: ObjectId('68ebcad9114ad7cda4cebea5'),
+    RollNo: 2,
+    StudentName: 'Priya Deshmukh',
+    Age: 14,
+    Branch: 'Computer',
+    Address: { City: 'Mumbai', State: 'Maharashtra' },
+    Hobbies: [ 'Reading', 'Dancing' ]
+  },
+  {
+    _id: ObjectId('68ebcad9114ad7cda4cebea6'),
+    RollNo: 3,
+    StudentName: 'Rohit Patil',
+    Age: 17,
+    Branch: 'Electrical',
+    Address: { City: 'Nashik', State: 'Maharashtra' },
+    Hobbies: [ 'Football', 'Gaming' ]
+  },
+  {
+    _id: ObjectId('68ebcad9114ad7cda4cebea7'),
+    RollNo: 4,
+    StudentName: 'Anjali Gupta',
+    Age: 18,
+    Branch: 'Computer',
+    Address: { City: 'Pune', State: 'Maharashtra' },
+    Hobbies: [ 'Singing', 'Drawing' ]
+  },
+  {
+    _id: ObjectId('68ebcad9114ad7cda4cebea8'),
+    RollNo: 5,
+    StudentName: 'Suresh Kumar',
+    Age: 15,
+    Branch: 'Civil',
+    Address: { City: 'Delhi', State: 'Delhi' },
+    Hobbies: [ 'Reading', 'Chess' ]
+  },
+  {
+    _id: ObjectId('68ebcad9114ad7cda4cebea9'),
+    RollNo: 6,
+    StudentName: 'Neha Singh',
+    Age: 17,
+    Branch: 'Computer',
+    Address: { City: 'Pune', State: 'Maharashtra' },
+    Hobbies: [ 'Dancing', 'Traveling' ]
+  },
+  {
+    _id: ObjectId('68ebcad9114ad7cda4cebeaa'),
+    RollNo: 7,
+    StudentName: 'Akash Mehta',
+    Age: 16,
+    Branch: 'IT',
+    Address: { City: 'Nagpur', State: 'Maharashtra' },
+    Hobbies: [ 'Gaming', 'Movies' ]
+  },
+  {
+    _id: ObjectId('68ebcad9114ad7cda4cebeab'),
+    RollNo: 8,
+    StudentName: 'Riya Kulkarni',
+    Age: 18,
+    Branch: 'Computer',
+    Address: { City: 'Pune', State: 'Maharashtra' },
+    Hobbies: [ 'Reading', 'Painting' ]
+  },
+  {
+    _id: ObjectId('68ebcad9114ad7cda4cebeac'),
+    RollNo: 9,
+    StudentName: 'Deepak Yadav',
+    Age: 14,
+    Branch: 'Civil',
+    Address: { City: 'Aurangabad', State: 'Maharashtra' },
+    Hobbies: [ 'Swimming', 'Running' ]
+  },
+  {
+    _id: ObjectId('68ebcad9114ad7cda4cebead'),
+    RollNo: 10,
+    StudentName: 'Aarav Joshi',
+    Age: 19,
+    Branch: 'Mechanical',
+    Address: { City: 'Pune', State: 'Maharashtra' },
+    Hobbies: [ 'Cricket', 'Cooking' ]
+  }
+]
+Institute> db.Students.find({ Age: { $gt: 15 } }).pretty()
+[
+  {
+    _id: ObjectId('68ebcad9114ad7cda4cebea4'),
+    RollNo: 1,
+    StudentName: 'Amit Sharma',
+    Age: 16,
+    Branch: 'Mechanical',
+    Address: { City: 'Pune', State: 'Maharashtra' },
+    Hobbies: [ 'Cricket', 'Music' ]
+  },
+  {
+    _id: ObjectId('68ebcad9114ad7cda4cebea6'),
+    RollNo: 3,
+    StudentName: 'Rohit Patil',
+    Age: 17,
+    Branch: 'Electrical',
+    Address: { City: 'Nashik', State: 'Maharashtra' },
+    Hobbies: [ 'Football', 'Gaming' ]
+  },
+  {
+    _id: ObjectId('68ebcad9114ad7cda4cebea7'),
+    RollNo: 4,
+    StudentName: 'Anjali Gupta',
+    Age: 18,
+    Branch: 'Computer',
+    Address: { City: 'Pune', State: 'Maharashtra' },
+    Hobbies: [ 'Singing', 'Drawing' ]
+  },
+  {
+    _id: ObjectId('68ebcad9114ad7cda4cebea9'),
+    RollNo: 6,
+    StudentName: 'Neha Singh',
+    Age: 17,
+    Branch: 'Computer',
+    Address: { City: 'Pune', State: 'Maharashtra' },
+    Hobbies: [ 'Dancing', 'Traveling' ]
+  },
+  {
+    _id: ObjectId('68ebcad9114ad7cda4cebeaa'),
+    RollNo: 7,
+    StudentName: 'Akash Mehta',
+    Age: 16,
+    Branch: 'IT',
+    Address: { City: 'Nagpur', State: 'Maharashtra' },
+    Hobbies: [ 'Gaming', 'Movies' ]
+  },
+  {
+    _id: ObjectId('68ebcad9114ad7cda4cebeab'),
+    RollNo: 8,
+    StudentName: 'Riya Kulkarni',
+    Age: 18,
+    Branch: 'Computer',
+    Address: { City: 'Pune', State: 'Maharashtra' },
+    Hobbies: [ 'Reading', 'Painting' ]
+  },
+  {
+    _id: ObjectId('68ebcad9114ad7cda4cebead'),
+    RollNo: 10,
+    StudentName: 'Aarav Joshi',
+    Age: 19,
+    Branch: 'Mechanical',
+    Address: { City: 'Pune', State: 'Maharashtra' },
+    Hobbies: [ 'Cricket', 'Cooking' ]
+  }
+]
+Institute> db.Students.find().sort({ StudentName: 1 }).pretty()
+[
+  {
+    _id: ObjectId('68ebcad9114ad7cda4cebead'),
+    RollNo: 10,
+    StudentName: 'Aarav Joshi',
+    Age: 19,
+    Branch: 'Mechanical',
+    Address: { City: 'Pune', State: 'Maharashtra' },
+    Hobbies: [ 'Cricket', 'Cooking' ]
+  },
+  {
+    _id: ObjectId('68ebcad9114ad7cda4cebeaa'),
+    RollNo: 7,
+    StudentName: 'Akash Mehta',
+    Age: 16,
+    Branch: 'IT',
+    Address: { City: 'Nagpur', State: 'Maharashtra' },
+    Hobbies: [ 'Gaming', 'Movies' ]
+  },
+  {
+    _id: ObjectId('68ebcad9114ad7cda4cebea4'),
+    RollNo: 1,
+    StudentName: 'Amit Sharma',
+    Age: 16,
+    Branch: 'Mechanical',
+    Address: { City: 'Pune', State: 'Maharashtra' },
+    Hobbies: [ 'Cricket', 'Music' ]
+  },
+  {
+    _id: ObjectId('68ebcad9114ad7cda4cebea7'),
+    RollNo: 4,
+    StudentName: 'Anjali Gupta',
+    Age: 18,
+    Branch: 'Computer',
+    Address: { City: 'Pune', State: 'Maharashtra' },
+    Hobbies: [ 'Singing', 'Drawing' ]
+  },
+  {
+    _id: ObjectId('68ebcad9114ad7cda4cebeac'),
+    RollNo: 9,
+    StudentName: 'Deepak Yadav',
+    Age: 14,
+    Branch: 'Civil',
+    Address: { City: 'Aurangabad', State: 'Maharashtra' },
+    Hobbies: [ 'Swimming', 'Running' ]
+  },
+  {
+    _id: ObjectId('68ebcad9114ad7cda4cebea9'),
+    RollNo: 6,
+    StudentName: 'Neha Singh',
+    Age: 17,
+    Branch: 'Computer',
+    Address: { City: 'Pune', State: 'Maharashtra' },
+    Hobbies: [ 'Dancing', 'Traveling' ]
+  },
+  {
+    _id: ObjectId('68ebcad9114ad7cda4cebea5'),
+    RollNo: 2,
+    StudentName: 'Priya Deshmukh',
+    Age: 14,
+    Branch: 'Computer',
+    Address: { City: 'Mumbai', State: 'Maharashtra' },
+    Hobbies: [ 'Reading', 'Dancing' ]
+  },
+  {
+    _id: ObjectId('68ebcad9114ad7cda4cebeab'),
+    RollNo: 8,
+    StudentName: 'Riya Kulkarni',
+    Age: 18,
+    Branch: 'Computer',
+    Address: { City: 'Pune', State: 'Maharashtra' },
+    Hobbies: [ 'Reading', 'Painting' ]
+  },
+  {
+    _id: ObjectId('68ebcad9114ad7cda4cebea6'),
+    RollNo: 3,
+    StudentName: 'Rohit Patil',
+    Age: 17,
+    Branch: 'Electrical',
+    Address: { City: 'Nashik', State: 'Maharashtra' },
+    Hobbies: [ 'Football', 'Gaming' ]
+  },
+  {
+    _id: ObjectId('68ebcad9114ad7cda4cebea8'),
+    RollNo: 5,
+    StudentName: 'Suresh Kumar',
+    Age: 15,
+    Branch: 'Civil',
+    Address: { City: 'Delhi', State: 'Delhi' },
+    Hobbies: [ 'Reading', 'Chess' ]
+  }
+]
+...   { RollNo: 3 },
+...   { $set: { Branch: "Computer" } }
+... )
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+Institute>
+{ acknowledged: true, deletedCount: 1 }
+Institute>
+
+Institute> db.Students.find({ StudentName: { $regex: /^A/, $options: "i" } }).pretty()
+[
+  {
+    _id: ObjectId('68ebcad9114ad7cda4cebea7'),
+    RollNo: 4,
+    StudentName: 'Anjali Gupta',
+    Age: 18,
+    Branch: 'Computer',
+    Address: { City: 'Pune', State: 'Maharashtra' },
+    Hobbies: [ 'Singing', 'Drawing' ]
+  },
+  {
+    _id: ObjectId('68ebcad9114ad7cda4cebeaa'),
+    RollNo: 7,
+    StudentName: 'Akash Mehta',
+    Age: 16,
+    Branch: 'IT',
+    Address: { City: 'Nagpur', State: 'Maharashtra' },
+    Hobbies: [ 'Gaming', 'Movies' ]
+  },
+  {
+    _id: ObjectId('68ebcad9114ad7cda4cebead'),
+    RollNo: 10,
+    StudentName: 'Aarav Joshi',
+    Age: 19,
+    Branch: 'Mechanical',
+    Address: { City: 'Pune', State: 'Maharashtra' },
+    Hobbies: [ 'Cricket', 'Cooking' ]
+  }
+]
+Institute>
+9
+Institute>
+
+Institute> db.Students.countDocuments()
+9
+Institute> db.Students.find().limit(5).pretty()
+[
+  {
+    _id: ObjectId('68ebcad9114ad7cda4cebea5'),
+    RollNo: 2,
+    StudentName: 'Priya Deshmukh',
+    Age: 14,
+    Branch: 'Computer',
+    Address: { City: 'Mumbai', State: 'Maharashtra' },
+    Hobbies: [ 'Reading', 'Dancing' ]
+  },
+  {
+    _id: ObjectId('68ebcad9114ad7cda4cebea6'),
+    RollNo: 3,
+    StudentName: 'Rohit Patil',
+    Age: 17,
+    Branch: 'Computer',
+    Address: { City: 'Nashik', State: 'Maharashtra' },
+    Hobbies: [ 'Football', 'Gaming' ]
+  },
+  {
+    _id: ObjectId('68ebcad9114ad7cda4cebea7'),
+    RollNo: 4,
+    StudentName: 'Anjali Gupta',
+    Age: 18,
+    Branch: 'Computer',
+    Address: { City: 'Pune', State: 'Maharashtra' },
+    Hobbies: [ 'Singing', 'Drawing' ]
+  },
+  {
+    _id: ObjectId('68ebcad9114ad7cda4cebea8'),
+    RollNo: 5,
+    StudentName: 'Suresh Kumar',
+    Age: 15,
+    Branch: 'Civil',
+    Address: { City: 'Delhi', State: 'Delhi' },
+    Hobbies: [ 'Reading', 'Chess' ]
+  },
+  {
+    _id: ObjectId('68ebcad9114ad7cda4cebea9'),
+    RollNo: 6,
+    StudentName: 'Neha Singh',
+    Age: 17,
+    Branch: 'Computer',
+    Address: { City: 'Pune', State: 'Maharashtra' },
+    Hobbies: [ 'Dancing', 'Traveling' ]
+  }
+]
+Institute> db.Students.find().skip(3).pretty()
+[
+  {
+    _id: ObjectId('68ebcad9114ad7cda4cebea8'),
+    RollNo: 5,
+    StudentName: 'Suresh Kumar',
+    Age: 15,
+    Branch: 'Civil',
+    Address: { City: 'Delhi', State: 'Delhi' },
+    Hobbies: [ 'Reading', 'Chess' ]
+  },
+  {
+    _id: ObjectId('68ebcad9114ad7cda4cebea9'),
+    RollNo: 6,
+    StudentName: 'Neha Singh',
+    Age: 17,
+    Branch: 'Computer',
+    Address: { City: 'Pune', State: 'Maharashtra' },
+    Hobbies: [ 'Dancing', 'Traveling' ]
+  },
+  {
+    _id: ObjectId('68ebcad9114ad7cda4cebeaa'),
+    RollNo: 7,
+    StudentName: 'Akash Mehta',
+    Age: 16,
+    Branch: 'IT',
+    Address: { City: 'Nagpur', State: 'Maharashtra' },
+    Hobbies: [ 'Gaming', 'Movies' ]
+  },
+  {
+    _id: ObjectId('68ebcad9114ad7cda4cebeab'),
+    RollNo: 8,
+    StudentName: 'Riya Kulkarni',
+    Age: 18,
+    Branch: 'Computer',
+    Address: { City: 'Pune', State: 'Maharashtra' },
+    Hobbies: [ 'Reading', 'Painting' ]
+  },
+  {
+    _id: ObjectId('68ebcad9114ad7cda4cebeac'),
+    RollNo: 9,
+    StudentName: 'Deepak Yadav',
+    Age: 14,
+    Branch: 'Civil',
+    Address: { City: 'Aurangabad', State: 'Maharashtra' },
+    Hobbies: [ 'Swimming', 'Running' ]
+  },
+  {
+    _id: ObjectId('68ebcad9114ad7cda4cebead'),
+    RollNo: 10,
+    StudentName: 'Aarav Joshi',
+    Age: 19,
+    Branch: 'Mechanical',
+    Address: { City: 'Pune', State: 'Maharashtra' },
+    Hobbies: [ 'Cricket', 'Cooking' ]
+  }
+]
+Institute>
+[
+Institute>
+  { StudentName: 'Neha Singh' },
+Institute>
+  { StudentName: 'Aarav Joshi' }
+Institute>
+
+Institute>
+
+Institute>
+
+Institute> db.Students.find({ "Address.City": "Pune" }, { StudentName: 1, _id: 0 }).pretty()
+[
+  { StudentName: 'Anjali Gupta' },
+  { StudentName: 'Neha Singh' },
+  { StudentName: 'Riya Kulkarni' },
+  { StudentName: 'Aarav Joshi' }
+]
+Institute>
+
+Institute>
+
+Institute> db.Students.find({}, { StudentName: 1, _id: 0 }).pretty()
+[
+  { StudentName: 'Priya Deshmukh' },
+  { StudentName: 'Rohit Patil' },
+  { StudentName: 'Anjali Gupta' },
+  { StudentName: 'Suresh Kumar' },
+  { StudentName: 'Neha Singh' },
+  { StudentName: 'Akash Mehta' },
+  { StudentName: 'Riya Kulkarni' },
+  { StudentName: 'Deepak Yadav' },
+  { StudentName: 'Aarav Joshi' }
+]
+Institute>
+
+Institute>
+
+Institute> db.Students.drop()
+true

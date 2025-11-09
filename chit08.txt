@@ -1,0 +1,206 @@
+Microsoft Windows [Version 10.0.19045.6332]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32>mysql -u root -p
+Enter password: ***********
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 26
+Server version: 8.0.36 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> create database DBMS08;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> use DBMS08;
+Database changed
+mysql> CREATE TABLE instructor (
+    ->     T_ID INT PRIMARY KEY,
+    ->     name VARCHAR(50),
+    ->     dept_name VARCHAR(50),
+    ->     salary DECIMAL(10,2)
+    ->     salary DECIMAL(10,2)^C
+mysql> CREATE TABLE instructor (
+    ->     T_ID INT PRIMARY KEY,
+    ->     name VARCHAR(50),
+    ->     dept_name VARCHAR(50),
+    ->     salary DECIMAL(10,2)
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> CREATE TABLE course (
+    ->     course_id VARCHAR(10) PRIMARY KEY,
+    ->     title VARCHAR(100),
+    ->     dept_name VARCHAR(50),
+    ->     credits INT
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> CREATE TABLE teaches (
+    ->     T_ID INT,
+    ->     course_id VARCHAR(10),
+    ->     sec_id VARCHAR(10),
+    ->     semester VARCHAR(10),
+    ->     year INT,
+    ->     FOREIGN KEY (T_ID) REFERENCES instructor(T_ID),
+    ->     FOREIGN KEY (course_id) REFERENCES course(course_id)
+    -> );
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> CREATE TABLE student (
+    ->     S_ID INT PRIMARY KEY,
+    ->     name VARCHAR(50),
+    ->     dept_name VARCHAR(50),
+    ->     tot_cred INT
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> CREATE TABLE student (
+    ->     S_ID INT PRIMARY KEY,
+    ->     name VARCHAR(50),
+    ->     dept_name VARCHAR(50),
+    ->     tot_cred INT
+    -> ^C
+mysql> INSERT INTO instructor VALUES
+    -> (1, 'Dr. Smith', 'CSE', 80000),
+    -> (2, 'Dr. Johnson', 'ECE', 75000),
+    -> (3, 'Dr. Lee', 'ME', 70000);
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> show * from instructor;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '* from instructor' at line 1
+mysql> select * from instructor;
++------+-------------+-----------+----------+
+| T_ID | name        | dept_name | salary   |
++------+-------------+-----------+----------+
+|    1 | Dr. Smith   | CSE       | 80000.00 |
+|    2 | Dr. Johnson | ECE       | 75000.00 |
+|    3 | Dr. Lee     | ME        | 70000.00 |
++------+-------------+-----------+----------+
+3 rows in set (0.00 sec)
+
+mysql> INSERT INTO course VALUES
+    -> ('C101', 'DBMS', 'CSE', 4),
+    -> ('C102', 'Networks', 'ECE', 3),
+    -> ('C103', 'Thermodynamics', 'ME', 4);
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select * from course;
++-----------+----------------+-----------+---------+
+| course_id | title          | dept_name | credits |
++-----------+----------------+-----------+---------+
+| C101      | DBMS           | CSE       |       4 |
+| C102      | Networks       | ECE       |       3 |
+| C103      | Thermodynamics | ME        |       4 |
++-----------+----------------+-----------+---------+
+3 rows in set (0.00 sec)
+
+mysql> INSERT INTO teaches VALUES
+    -> (1, 'C101', 'S1', 'Spring', 2024),
+    -> (1, 'C101', 'S2', 'Fall', 2024),
+    -> (2, 'C102', 'S1', 'Spring', 2024),
+    -> (3, 'C103', 'S1', 'Summer', 2024);
+Query OK, 4 rows affected (0.01 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> select * from teaches;
++------+-----------+--------+----------+------+
+| T_ID | course_id | sec_id | semester | year |
++------+-----------+--------+----------+------+
+|    1 | C101      | S1     | Spring   | 2024 |
+|    1 | C101      | S2     | Fall     | 2024 |
+|    2 | C102      | S1     | Spring   | 2024 |
+|    3 | C103      | S1     | Summer   | 2024 |
++------+-----------+--------+----------+------+
+4 rows in set (0.00 sec)
+
+mysql> INSERT INTO student VALUES
+    -> (101, 'Alice', 'CSE', 120),
+    -> (102, 'Bob', 'ECE', 100),
+    -> (103, 'Charlie', NULL, 80);
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select * from student;
++------+---------+-----------+----------+
+| S_ID | name    | dept_name | tot_cred |
++------+---------+-----------+----------+
+|  101 | Alice   | CSE       |      120 |
+|  102 | Bob     | ECE       |      100 |
+|  103 | Charlie | NULL      |       80 |
++------+---------+-----------+----------+
+3 rows in set (0.00 sec)
+
+mysql> INSERT INTO student VALUES
+    -> (101, 'Alice', 'CSE', 120),
+    -> (102, 'Bob', 'ECE', 100),a
+    -> (103, 'Charlie', NULL, ^C
+mysql> SELECT DISTINCT i.name, t.semester
+    -> FROM instructor AS i
+    -> JOIN teaches AS t ON i.T_ID = t.T_ID
+    -> ORDER BY t.semester, i.name;
++-------------+----------+
+| name        | semester |
++-------------+----------+
+| Dr. Smith   | Fall     |
+| Dr. Johnson | Spring   |
+| Dr. Smith   | Spring   |
+| Dr. Lee     | Summer   |
++-------------+----------+
+4 rows in set (0.00 sec)
+
+mysql> CREATE VIEW student_details AS
+    -> SELECT S_ID, name, dept_name, tot_cred
+    -> FROM student;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> SELECT * FROM student_details;
++------+---------+-----------+----------+
+| S_ID | name    | dept_name | tot_cred |
++------+---------+-----------+----------+
+|  101 | Alice   | CSE       |      120 |
+|  102 | Bob     | ECE       |      100 |
+|  103 | Charlie | NULL      |       80 |
++------+---------+-----------+----------+
+3 rows in set (0.00 sec)
+
+mysql> ALTER TABLE student
+    -> CHANGE COLUMN dept_name department_name VARCHAR(50);
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc student;
++-----------------+-------------+------+-----+---------+-------+
+| Field           | Type        | Null | Key | Default | Extra |
++-----------------+-------------+------+-----+---------+-------+
+| S_ID            | int         | NO   | PRI | NULL    |       |
+| name            | varchar(50) | YES  |     | NULL    |       |
+| department_name | varchar(50) | YES  |     | NULL    |       |
+| tot_cred        | int         | YES  |     | NULL    |       |
++-----------------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT * FROM student_details;
+ERROR 1356 (HY000): View 'dbms08.student_details' references invalid table(s) or column(s) or function(s) or definer/invoker of view lack rights to use them
+mysql> DELETE FROM student
+    -> WHERE department_name IS NULL;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from student;
++------+-------+-----------------+----------+
+| S_ID | name  | department_name | tot_cred |
++------+-------+-----------------+----------+
+|  101 | Alice | CSE             |      120 |
+|  102 | Bob   | ECE             |      100 |
++------+-------+-----------------+----------+
+2 rows in set (0.00 sec)
+
+mysql>

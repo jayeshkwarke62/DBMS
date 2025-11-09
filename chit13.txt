@@ -1,0 +1,92 @@
+Microsoft Windows [Version 10.0.19045.6332]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\Admin>java --version
+'java' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\Users\Admin>mongosh
+Current Mongosh Log ID: 68ebc37aa9bc7a28d4cebea3
+Connecting to:          mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.5.8
+Using MongoDB:          8.2.1
+Using Mongosh:          2.5.8
+
+For mongosh info see: https://www.mongodb.com/docs/mongodb-shell/
+
+------
+   The server generated these startup warnings when booting
+   2025-10-12T19:39:20.799+05:30: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
+------
+
+test> use mydb
+switched to db mydb
+mydb> db.movies.insertMany([
+...   {
+...     name: "Movie1",
+...     type: "action",
+...     budget: 1000000,
+...     producer: {
+...       name: "producer1",
+...       address: "PUNE"
+...     }
+...   },
+...   {
+...     name: "Movie2",
+...     type: "drama",
+...     budget: 80000,
+...     producer: {
+...       name: "producer2",
+...       address: "DELHI"
+...     }
+...   },
+...   {
+...     name: "Movie3",
+...     type: "action",
+...     budget: 200000,
+...     producer: {
+...       name: "producer1",
+...       address: "PUNE"
+...     }
+...   }
+... ])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('68ebc3a1a9bc7a28d4cebea4'),
+    '1': ObjectId('68ebc3a1a9bc7a28d4cebea5'),
+    '2': ObjectId('68ebc3a1a9bc7a28d4cebea6')
+  }
+}
+mydb> db.movies.find(
+...   { budget: { $gt: 100000 } },
+...   { name: 1, _id: 0 }
+... )
+[ { name: 'Movie1' }, { name: 'Movie3' } ]
+mydb> db.movies.find(
+...   { "producer.address": "PUNE" },
+...   { "producer.name": 1, _id: 0 }
+... )
+[
+  { producer: { name: 'producer1' } },
+  { producer: { name: 'producer1' } }
+]
+mydb> db.movies.updateMany(
+...   { type: "action" },
+...   { $set: { type: "horror" } }
+... )
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 2,
+  modifiedCount: 2,
+  upsertedCount: 0
+}
+...   { "producer.name": "producer1" },
+...   { name: 1, "producer.address": 1, _id: 0 }
+... )
+[
+  { name: 'Movie1', producer: { address: 'PUNE' } },
+  { name: 'Movie3', producer: { address: 'PUNE' } }
+]
+mydb>
+

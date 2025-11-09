@@ -1,0 +1,137 @@
+Microsoft Windows [Version 10.0.19045.6332]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32>mysql -u root -p
+Enter password: ***********
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 11
+Server version: 8.0.36 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> create database libraryDB;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> use libraryDB;
+Database changed
+mysql> CREATE TABLE Borrower (
+    ->     Roll_no INT PRIMARY KEY,
+    ->     Name VARCHAR(50),
+    ->     DateOfIssue DATE,
+    ->     NameOfBook VARCHAR(100),
+    ->     Status CHAR(1)   -- 'I' for Issued, 'R' for Returned
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> CREATE TABLE Fine (
+    ->     Roll_no INT,
+    ->     Date DATE,
+    ->     Amt INT
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> INSERT INTO Borrower VALUES
+    -> (1, 'Rohan', '2025-09-10', 'DBMS', 'I'),
+    -> (2, 'Priya', '2025-09-25', 'CN', 'I'),
+    -> (3, 'Madhura', '2025-09-20', 'OS', 'I'),
+    -> (4, 'Anita', '2025-09-15', 'DAA', 'I');
+Query OK, 4 rows affected (0.01 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> DROP PROCEDURE IF EXISTS Return_Book;
+Query OK, 0 rows affected, 1 warning (0.02 sec)
+
+mysql> DELIMITER /
+mysql> CREATE PROCEDURE Return_Book (
+    ->   IN p_roll INT,
+    ->   IN p_book VARCHAR(100)
+    -> )
+    -> BEGIN
+    ->   DECLARE v_issue DATE;
+    ->   DECLARE v_days INT DEFAULT 0;
+    ->   DECLARE v_fine INT DEFAULT 0;
+    ->   DECLARE no_row INT DEFAULT 0;
+    ->
+    ->   DECLARE CONTINUE HANDLER FOR NOT FOUND SET no_row = 1;
+    ->
+    ->   SELECT DateOfIssue
+    ->     INTO v_issue
+    ->     FROM Borrower
+    ->    WHERE Roll_no = p_roll AND NameOfBook = p_book;
+    ->
+    ->   IF no_row = 1 THEN
+    ->     SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No such borrower or book found!';
+    ->   ELSE
+    ->     SET v_days = DATEDIFF(CURDATE(), v_issue);
+    ->
+    ->     IF v_days <= 15 THEN
+    ->       SET v_fine = 0;
+    ->     ELSEIF v_days <= 30 THEN
+    ->       SET v_fine = (v_days - 15) * 5;
+    ->     ELSE
+    ->       SET v_fine = (15 * 5) + (v_days - 30) * 50;
+    ->     END IF;
+    ->
+    ->     UPDATE Borrower
+    ->        SET Status = 'R'
+    ->      WHERE Roll_no = p_roll AND NameOfBook = p_book;
+    ->
+    ->     IF v_fine > 0 THEN
+    ->       INSERT INTO Fine (Roll_no, Date, Amt) VALUES (p_roll, CURDATE(), v_fine);
+    ->     END IF;
+    ->
+    ->     SELECT p_roll   AS Roll_no,
+    ->            p_book   AS Book,
+    ->            v_issue  AS DateOfIssue,
+    ->            v_days   AS DaysPassed,
+    ->            v_fine   AS FineAmount;
+    ->   END IF;
+    -> END
+    -> /
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> DELIMITER ;
+mysql> CALL Return_Book(3, 'OS');
++---------+------+-------------+------------+------------+
+| Roll_no | Book | DateOfIssue | DaysPassed | FineAmount |
++---------+------+-------------+------------+------------+
+|       3 | OS   | 2025-09-20  |         23 |         40 |
++---------+------+-------------+------------+------------+
+1 row in set (0.01 sec)
+
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> CALL Return_Book(99, 'NonExistentBook');
+ERROR 1644 (45000): No such borrower or book found!
+mysql> SELECT * FROM Borrower WHERE Roll_no = 3;
++---------+---------+-------------+------------+--------+
+| Roll_no | Name    | DateOfIssue | NameOfBook | Status |
++---------+---------+-------------+------------+--------+
+|       3 | Madhura | 2025-09-20  | OS         | R      |
++---------+---------+-------------+------------+--------+
+1 row in set (0.00 sec)
+
+mysql> SELECT * FROM Fine WHERE Roll_no = 3;
++---------+------------+------+
+| Roll_no | Date       | Amt  |
++---------+------------+------+
+|       3 | 2025-10-13 |   40 |
++---------+------------+------+
+1 row in set (0.00 sec)
+
+mysql> UPDATE Borrower SET Status = 'I' WHERE Roll_no = 3 AND NameOfBook = 'OS';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> DELETE FROM Fine WHERE Roll_no = 3;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT * FROM Fine WHERE Roll_no = 3;
+Empty set (0.00 sec)
+

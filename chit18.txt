@@ -1,0 +1,129 @@
+Microsoft Windows [Version 10.0.19045.6332]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32>mongosh
+Current Mongosh Log ID: 68ebd2fc58bcd38766cebea3
+Connecting to:          mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.5.8
+Using MongoDB:          8.2.1
+Using Mongosh:          2.5.8
+
+For mongosh info see: https://www.mongodb.com/docs/mongodb-shell/
+
+------
+   The server generated these startup warnings when booting
+   2025-10-12T19:39:20.799+05:30: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
+------
+
+test> use cityDB
+switched to db cityDB
+cityDB> db.city.insertMany([
+...     { city: "pune", type: "urban", state: "MH", population: 5600000 },
+...     { city: "mumbai", type: "urban", state: "MH", population: 12400000 },
+...     { city: "nagpur", type: "urban", state: "MH", population: 2400000 },
+...     { city: "nashik", type: "semi-urban", state: "MH", population: 1500000 },
+...     { city: "bhopal", type: "urban", state: "MP", population: 1800000 },
+...     { city: "indore", type: "urban", state: "MP", population: 2000000 },
+...     { city: "gwalior", type: "semi-urban", state: "MP", population: 1200000 }
+... ])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('68ebd30f58bcd38766cebea4'),
+    '1': ObjectId('68ebd30f58bcd38766cebea5'),
+    '2': ObjectId('68ebd30f58bcd38766cebea6'),
+    '3': ObjectId('68ebd30f58bcd38766cebea7'),
+    '4': ObjectId('68ebd30f58bcd38766cebea8'),
+    '5': ObjectId('68ebd30f58bcd38766cebea9'),
+    '6': ObjectId('68ebd30f58bcd38766cebeaa')
+  }
+}
+cityDB>
+
+cityDB> var mapFunctionState = function() {
+...     emit(this.state, this.population);
+... };
+
+cityDB> var reduceFunctionState = function(key, values) {
+...     return Array.sum(values);
+... };
+
+cityDB>
+
+cityDB> db.city.mapReduce(
+...     mapFunctionState,
+...     reduceFunctionState,
+...     { out: "statewise_population" }
+... )
+DeprecationWarning: Collection.mapReduce() is deprecated. Use an aggregation instead.
+See https://mongodb.com/docs/manual/core/map-reduce for details.
+{ result: 'statewise_population', ok: 1 }
+cityDB>
+
+cityDB>
+
+cityDB> db.statewise_population.find().pretty();
+[ { _id: 'MH', value: 21900000 }, { _id: 'MP', value: 5000000 } ]
+cityDB>
+
+cityDB> var mapFunctionCity = function() {
+...     emit(this.city, this.population);
+... };
+
+cityDB>
+
+cityDB> var reduceFunctionCity = function(key, values) {
+...     return Array.sum(values);
+... };
+
+cityDB>
+
+cityDB> db.city.mapReduce(
+...     mapFunctionCity,
+...     reduceFunctionCity,
+...     { out: "citywise_population" }
+... )
+{ result: 'citywise_population', ok: 1 }
+cityDB>
+
+cityDB> db.citywise_population.find().pretty();
+[
+  { _id: 'indore', value: 2000000 },
+  { _id: 'nagpur', value: 2400000 },
+  { _id: 'pune', value: 5600000 },
+  { _id: 'mumbai', value: 12400000 },
+  { _id: 'bhopal', value: 1800000 },
+  { _id: 'gwalior', value: 1200000 },
+  { _id: 'nashik', value: 1500000 }
+]
+cityDB>
+
+...     emit(this.type, this.population);
+cityDB>
+
+cityDB>
+
+cityDB>
+
+cityDB>
+
+cityDB> var mapFunctionType = function() {
+...     emit(this.type, this.population);
+... };
+
+cityDB> var reduceFunctionType = function(key, values) {
+...     return Array.sum(values);
+... };
+
+...     mapFunctionType,
+...     reduceFunctionType,
+...     { out: "typewise_population" }
+... )
+{ result: 'typewise_population', ok: 1 }
+cityDB>
+
+cityDB> db.typewise_population.find().pretty();
+[
+  { _id: 'semi-urban', value: 2700000 },
+  { _id: 'urban', value: 24200000 }
+]
+cityDB>

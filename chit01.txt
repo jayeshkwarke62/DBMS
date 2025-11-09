@@ -1,0 +1,160 @@
+mysql> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| frsvtr             |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sakshi             |
+| sys                |
+| userdata           |
++--------------------+
+7 rows in set (0.04 sec)
+
+mysql> clear
+mysql> create database DBMS01;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> use DBMS01;
+Database changed
+mysql> create table Customer(C_Id int primary key,Cname varchar(50) not null, City varchar(50));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> insert into Customer(C_Id, Cname, City) values (1,'John','Nashik')(2,'Seema','Aurangabad')(3,'Amita','Nagar')(4,'Rakesh','Pune')(5,'Samata','Nashik')(6,'Ankita','Chandwad')(7,'Bhavika','Pune')(8,'Deepa','Mumbai')(9,'Nitin','Nagpur')(10,'Pooja','Pune');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(2,'Seema','Aurangabad')(3,'Amita','Nagar')(4,'Rakesh','Pune')(5,'Samata','Nashi' at line 1
+mysql> insert into Customer(C_Id, Cname, City) values (1,'John','Nashik'),(2,'Seema','Aurangabad'),(3,'Amita','Nagar'),(4,'Rakesh','Pune'),(5,'Samata','Nashik'),(6,'Ankita','Chandwad'),(7,'Bhavika','Pune'),(8,'Deepa','Mumbai'),(9,'Nitin','Nagpur'),(10,'Pooja','Pune');
+Query OK, 10 rows affected (0.01 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> Create table Account(C_Id int,Acc_Type varchar(50),Amount int);
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> insert into Account values(1,'Current',5000),(2,'Saving',20000),(3,'Saving',70000),(4,'Saving',50000),(6,'Current',35000),(7,'Loan',30000),(8,'Saving',50000),(9,'Saving',90000),(10,'Loan',8000),(11,'Current',45000);
+Query OK, 10 rows affected (0.01 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> select c.Cname,a.Acc_Type,a.Amount from Customer c join Account a on c.C_Id=a.C_Id where a.Acc_Type="Saving";
++--------+----------+--------+
+| Cname  | Acc_Type | Amount |
++--------+----------+--------+
+| Seema  | Saving   |  20000 |
+| Amita  | Saving   |  70000 |
+| Rakesh | Saving   |  50000 |
+| Deepa  | Saving   |  50000 |
+| Nitin  | Saving   |  90000 |
++--------+----------+--------+
+5 rows in set (0.00 sec)
+
+mysql> select * from Customer natural join Account;
++------+---------+------------+----------+--------+
+| C_Id | Cname   | City       | Acc_Type | Amount |
++------+---------+------------+----------+--------+
+|    1 | John    | Nashik     | Current  |   5000 |
+|    2 | Seema   | Aurangabad | Saving   |  20000 |
+|    3 | Amita   | Nagar      | Saving   |  70000 |
+|    4 | Rakesh  | Pune       | Saving   |  50000 |
+|    6 | Ankita  | Chandwad   | Current  |  35000 |
+|    7 | Bhavika | Pune       | Loan     |  30000 |
+|    8 | Deepa   | Mumbai     | Saving   |  50000 |
+|    9 | Nitin   | Nagpur     | Saving   |  90000 |
+|   10 | Pooja   | Pune       | Loan     |   8000 |
++------+---------+------------+----------+--------+
+9 rows in set (0.00 sec)
+
+mysql> select * from Customer c left join Account a on c.C_Id=a.C_Id;
++------+---------+------------+------+----------+--------+
+| C_Id | Cname   | City       | C_Id | Acc_Type | Amount |
++------+---------+------------+------+----------+--------+
+|    1 | John    | Nashik     |    1 | Current  |   5000 |
+|    2 | Seema   | Aurangabad |    2 | Saving   |  20000 |
+|    3 | Amita   | Nagar      |    3 | Saving   |  70000 |
+|    4 | Rakesh  | Pune       |    4 | Saving   |  50000 |
+|    5 | Samata  | Nashik     | NULL | NULL     |   NULL |
+|    6 | Ankita  | Chandwad   |    6 | Current  |  35000 |
+|    7 | Bhavika | Pune       |    7 | Loan     |  30000 |
+|    8 | Deepa   | Mumbai     |    8 | Saving   |  50000 |
+|    9 | Nitin   | Nagpur     |    9 | Saving   |  90000 |
+|   10 | Pooja   | Pune       |   10 | Loan     |   8000 |
++------+---------+------------+------+----------+--------+
+10 rows in set (0.00 sec)
+
+mysql> select * from Customer c right join Account a on c.C_Id=a.C_Id;
++------+---------+------------+------+----------+--------+
+| C_Id | Cname   | City       | C_Id | Acc_Type | Amount |
++------+---------+------------+------+----------+--------+
+|    1 | John    | Nashik     |    1 | Current  |   5000 |
+|    2 | Seema   | Aurangabad |    2 | Saving   |  20000 |
+|    3 | Amita   | Nagar      |    3 | Saving   |  70000 |
+|    4 | Rakesh  | Pune       |    4 | Saving   |  50000 |
+|    6 | Ankita  | Chandwad   |    6 | Current  |  35000 |
+|    7 | Bhavika | Pune       |    7 | Loan     |  30000 |
+|    8 | Deepa   | Mumbai     |    8 | Saving   |  50000 |
+|    9 | Nitin   | Nagpur     |    9 | Saving   |  90000 |
+|   10 | Pooja   | Pune       |   10 | Loan     |   8000 |
+| NULL | NULL    | NULL       |   11 | Current  |  45000 |
++------+---------+------------+------+----------+--------+
+10 rows in set (0.00 sec)
+
+mysql> select * from Customer where City = (Select City from Customer where Cname='Pooja');
++------+---------+------+
+| C_Id | Cname   | City |
++------+---------+------+
+|    4 | Rakesh  | Pune |
+|    7 | Bhavika | Pune |
+|   10 | Pooja   | Pune |
++------+---------+------+
+3 rows in set (0.00 sec)
+
+mysql> select * from Account where Account < (select avg(Amount) from Account);
+ERROR 1054 (42S22): Unknown column 'Account' in 'where clause'
+mysql> select * from Account where Account < (Select avg(Amount) from Account);
+ERROR 1054 (42S22): Unknown column 'Account' in 'where clause'
+mysql> SELECT *
+    -> FROM Account
+    -> WHERE Amount < (
+    ->     SELECT AVG(Amount) FROM Account
+    -> );
++------+----------+--------+
+| C_Id | Acc_Type | Amount |
++------+----------+--------+
+|    1 | Current  |   5000 |
+|    2 | Saving   |  20000 |
+|    6 | Current  |  35000 |
+|    7 | Loan     |  30000 |
+|   10 | Loan     |   8000 |
++------+----------+--------+
+5 rows in set (0.01 sec)
+
+mysql> SELECT C_Id from Account where Amount = (select max(Amount) from Account);
++------+
+| C_Id |
++------+
+|    9 |
++------+
+1 row in set (0.00 sec)
+
+mysql> SELECT Acc_Type, Amount
+    -> FROM Account a
+    -> WHERE Amount = (
+    ->     SELECT MIN(Amount)
+    ->     FROM Account a2
+    ->     WHERE a2.Acc_Type = a.Acc_Type
+    -> );
++----------+--------+
+| Acc_Type | Amount |
++----------+--------+
+| Current  |   5000 |
+| Saving   |  20000 |
+| Loan     |   8000 |
++----------+--------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT *
+    -> FROM Account
+    -> WHERE Amount > (
+    ->     SELECT MAX(Amount)
+    ->     FROM Account
+    ->     WHERE Acc_Type = 'Saving'
+    -> );
+Empty set (0.00 sec)

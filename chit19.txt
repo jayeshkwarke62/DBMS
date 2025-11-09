@@ -1,0 +1,87 @@
+++++++++++++++++++++++Microsoft Windows [Version 10.0.19045.6332]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32>mysql -u root -p
+Enter password: ***********
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 8.0.36 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> CREATE DATABASE company;
+Query OK, 1 row affected (0.10 sec)
+
+mysql> USE company;
+Database changed
+mysql> CREATE TABLE emp (
+    ->     Eno INT AUTO_INCREMENT PRIMARY KEY,
+    ->     Ename VARCHAR(50) NOT NULL,
+    ->     Address VARCHAR(100) DEFAULT 'Nashik',
+    ->     Joindate DATE,
+    ->     Salary DECIMAL(10,2)
+    -> );
+Query OK, 0 rows affected (0.15 sec)
+
+mysql> ALTER TABLE emp AUTO_INCREMENT = 101;
+Query OK, 0 rows affected (0.05 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> ALTER TABLE emp ADD Post VARCHAR(50);
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO emp (Ename, Address, Joindate, Salary, Post)
+    -> VALUES
+    -> ('Rahul Patil', DEFAULT, '2022-04-10', 40000, 'Manager'),
+    -> ('Sneha Deshmukh', 'Pune', '2023-01-15', 35000, 'Clerk'),
+    -> ('Vijay More', DEFAULT, '2021-11-05', 45000, 'Supervisor'),
+    -> ('Pooja Kale', 'Mumbai', '2024-06-01', 50000, 'HR');
+Query OK, 4 rows affected (0.01 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> CREATE INDEX idx_ename ON emp(Ename);
+Query OK, 0 rows affected (0.08 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> CREATE VIEW emp_view AS
+    -> SELECT Ename, Salary FROM emp;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> SELECT * FROM emp;
++-----+----------------+---------+------------+----------+------------+
+| Eno | Ename          | Address | Joindate   | Salary   | Post       |
++-----+----------------+---------+------------+----------+------------+
+| 101 | Rahul Patil    | Nashik  | 2022-04-10 | 40000.00 | Manager    |
+| 102 | Sneha Deshmukh | Pune    | 2023-01-15 | 35000.00 | Clerk      |
+| 103 | Vijay More     | Nashik  | 2021-11-05 | 45000.00 | Supervisor |
+| 104 | Pooja Kale     | Mumbai  | 2024-06-01 | 50000.00 | HR         |
++-----+----------------+---------+------------+----------+------------+
+4 rows in set (0.01 sec)
+
+mysql> SELECT * FROM emp_view;
++----------------+----------+
+| Ename          | Salary   |
++----------------+----------+
+| Rahul Patil    | 40000.00 |
+| Sneha Deshmukh | 35000.00 |
+| Vijay More     | 45000.00 |
+| Pooja Kale     | 50000.00 |
++----------------+----------+
+4 rows in set (0.00 sec)
+
+mysql> SHOW INDEX FROM emp;
++-------+------------+-----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| Table | Non_unique | Key_name  | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment | Visible | Expression |
++-------+------------+-----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| emp   |          0 | PRIMARY   |            1 | Eno         | A         |           4 |     NULL |   NULL |      | BTREE      |         |               | YES     | NULL       |
+| emp   |          1 | idx_ename |            1 | Ename       | A         |           4 |     NULL |   NULL |      | BTREE      |         |               | YES     | NULL       |
++-------+------------+-----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+2 rows in set (0.05 sec)
+

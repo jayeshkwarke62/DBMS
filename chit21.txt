@@ -1,0 +1,390 @@
+Microsoft Windows [Version 10.0.19045.6332]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32>mongosh
+Current Mongosh Log ID: 68ebe441811a2025a3cebea3
+Connecting to:          mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.5.8
+Using MongoDB:          8.2.1
+Using Mongosh:          2.5.8
+
+For mongosh info see: https://www.mongodb.com/docs/mongodb-shell/
+
+------
+   The server generated these startup warnings when booting
+   2025-10-12T19:39:20.799+05:30: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
+------
+
+test> use Institute
+switched to db Institute
+Institute> db.orderinfo.insertMany([
+...   { cust_id: 123, cust_name: "abc", status: "A", price: 250 },
+...   { cust_id: 124, cust_name: "xyz", status: "B", price: 300 },
+...   { cust_id: 125, cust_name: "pqr", status: "A", price: 200 },
+...   { cust_id: 126, cust_name: "lmn", status: "B", price: 350 },
+...   { cust_id: 127, cust_name: "stu", status: "A", price: 400 },
+...   { cust_id: 128, cust_name: "opq", status: "B", price: 150 },
+...   { cust_id: 129, cust_name: "def", status: "A", price: 275 },
+...   { cust_id: 130, cust_name: "ghi", status: "B", price: 325 },
+...   { cust_id: 131, cust_name: "jkl", status: "A", price: 225 },
+...   { cust_id: 132, cust_name: "mno", status: "B", price: 375 }
+... ])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('68ebe44e811a2025a3cebea4'),
+    '1': ObjectId('68ebe44e811a2025a3cebea5'),
+    '2': ObjectId('68ebe44e811a2025a3cebea6'),
+    '3': ObjectId('68ebe44e811a2025a3cebea7'),
+    '4': ObjectId('68ebe44e811a2025a3cebea8'),
+    '5': ObjectId('68ebe44e811a2025a3cebea9'),
+    '6': ObjectId('68ebe44e811a2025a3cebeaa'),
+    '7': ObjectId('68ebe44e811a2025a3cebeab'),
+    '8': ObjectId('68ebe44e811a2025a3cebeac'),
+    '9': ObjectId('68ebe44e811a2025a3cebead')
+  }
+}
+Institute> db.orderinfo.find().pretty()
+[
+  {
+    _id: ObjectId('68ebe44e811a2025a3cebea4'),
+    cust_id: 123,
+    cust_name: 'abc',
+    status: 'A',
+    price: 250
+  },
+  {
+    _id: ObjectId('68ebe44e811a2025a3cebea5'),
+    cust_id: 124,
+    cust_name: 'xyz',
+    status: 'B',
+    price: 300
+  },
+  {
+    _id: ObjectId('68ebe44e811a2025a3cebea6'),
+    cust_id: 125,
+    cust_name: 'pqr',
+    status: 'A',
+    price: 200
+  },
+  {
+    _id: ObjectId('68ebe44e811a2025a3cebea7'),
+    cust_id: 126,
+    cust_name: 'lmn',
+    status: 'B',
+    price: 350
+  },
+  {
+    _id: ObjectId('68ebe44e811a2025a3cebea8'),
+    cust_id: 127,
+    cust_name: 'stu',
+    status: 'A',
+    price: 400
+  },
+  {
+    _id: ObjectId('68ebe44e811a2025a3cebea9'),
+    cust_id: 128,
+    cust_name: 'opq',
+    status: 'B',
+    price: 150
+  },
+  {
+    _id: ObjectId('68ebe44e811a2025a3cebeaa'),
+    cust_id: 129,
+    cust_name: 'def',
+    status: 'A',
+    price: 275
+  },
+  {
+    _id: ObjectId('68ebe44e811a2025a3cebeab'),
+    cust_id: 130,
+    cust_name: 'ghi',
+    status: 'B',
+    price: 325
+  },
+  {
+    _id: ObjectId('68ebe44e811a2025a3cebeac'),
+    cust_id: 131,
+    cust_name: 'jkl',
+    status: 'A',
+    price: 225
+  },
+  {
+    _id: ObjectId('68ebe44e811a2025a3cebead'),
+    cust_id: 132,
+    cust_name: 'mno',
+    status: 'B',
+    price: 375
+  }
+]
+Institute>
+
+Institute> db.orderinfo.updateMany({}, { $set: { Age: 30 } })
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 10,
+  modifiedCount: 10,
+  upsertedCount: 0
+}
+Institute>
+
+Institute> db.orderinfo.createIndex({ cust_id: 1, status: 1 })
+cust_id_1_status_1
+Institute>
+
+Institute> db.orderinfo.find({ cust_id: 123, status: "A" }).explain("executionStats")
+{
+  explainVersion: '1',
+  queryPlanner: {
+    namespace: 'Institute.orderinfo',
+    parsedQuery: {
+      '$and': [ { cust_id: { '$eq': 123 } }, { status: { '$eq': 'A' } } ]
+    },
+    indexFilterSet: false,
+    queryHash: '3292C357',
+    planCacheShapeHash: '3292C357',
+    planCacheKey: '557069E9',
+    optimizationTimeMillis: 16,
+    maxIndexedOrSolutionsReached: false,
+    maxIndexedAndSolutionsReached: false,
+    maxScansToExplodeReached: false,
+    prunedSimilarIndexes: false,
+    winningPlan: {
+      isCached: false,
+      stage: 'FETCH',
+      inputStage: {
+        stage: 'IXSCAN',
+        keyPattern: { cust_id: 1, status: 1 },
+        indexName: 'cust_id_1_status_1',
+        isMultiKey: false,
+        multiKeyPaths: { cust_id: [], status: [] },
+        isUnique: false,
+        isSparse: false,
+        isPartial: false,
+        indexVersion: 2,
+        direction: 'forward',
+        indexBounds: { cust_id: [ '[123, 123]' ], status: [ '["A", "A"]' ] }
+      }
+    },
+    rejectedPlans: []
+  },
+  executionStats: {
+    executionSuccess: true,
+    nReturned: 1,
+    executionTimeMillis: 86,
+    totalKeysExamined: 1,
+    totalDocsExamined: 1,
+    executionStages: {
+      isCached: false,
+      stage: 'FETCH',
+      nReturned: 1,
+      executionTimeMillisEstimate: 59,
+      works: 2,
+      advanced: 1,
+      needTime: 0,
+      needYield: 0,
+      saveState: 2,
+      restoreState: 2,
+      isEOF: 1,
+      docsExamined: 1,
+      alreadyHasObj: 0,
+      inputStage: {
+        stage: 'IXSCAN',
+        nReturned: 1,
+        executionTimeMillisEstimate: 59,
+        works: 2,
+        advanced: 1,
+        needTime: 0,
+        needYield: 0,
+        saveState: 2,
+        restoreState: 2,
+        isEOF: 1,
+        keyPattern: { cust_id: 1, status: 1 },
+        indexName: 'cust_id_1_status_1',
+        isMultiKey: false,
+        multiKeyPaths: { cust_id: [], status: [] },
+        isUnique: false,
+        isSparse: false,
+        isPartial: false,
+        indexVersion: 2,
+        direction: 'forward',
+        indexBounds: { cust_id: [ '[123, 123]' ], status: [ '["A", "A"]' ] },
+        keysExamined: 1,
+        seeks: 1,
+        dupsTested: 0,
+        dupsDropped: 0
+      }
+    }
+  },
+  queryShapeHash: '4AC6F1461B5D99073764B43E85E0EB869A0D82DB7AC76D90E7C6DC6BCB7B8DCB',
+  command: {
+    find: 'orderinfo',
+    filter: { cust_id: 123, status: 'A' },
+    '$db': 'Institute'
+  },
+  serverInfo: {
+    host: 'DESKTOP-N7QVV5U',
+    port: 27017,
+    version: '8.2.1',
+    gitVersion: '3312bdcf28aa65f5930005e21c2cb130f648b8c3'
+  },
+  serverParameters: {
+    internalQueryFacetBufferSizeBytes: 104857600,
+    internalQueryFacetMaxOutputDocSizeBytes: 104857600,
+    internalLookupStageIntermediateDocumentMaxSizeBytes: 104857600,
+    internalDocumentSourceGroupMaxMemoryBytes: 104857600,
+    internalQueryMaxBlockingSortMemoryUsageBytes: 104857600,
+    internalQueryProhibitBlockingMergeOnMongoS: 0,
+    internalQueryMaxAddToSetBytes: 104857600,
+    internalDocumentSourceSetWindowFieldsMaxMemoryBytes: 104857600,
+    internalQueryFrameworkControl: 'trySbeRestricted',
+    internalQueryPlannerIgnoreIndexWithCollationForRegex: 1
+  },
+  ok: 1
+}
+Institute>
+
+Institute> db.orderinfo.find({ cust_id: 123, status: "A" }).explain("executionStats")
+{
+  explainVersion: '1',
+  queryPlanner: {
+    namespace: 'Institute.orderinfo',
+    parsedQuery: {
+      '$and': [ { cust_id: { '$eq': 123 } }, { status: { '$eq': 'A' } } ]
+    },
+    indexFilterSet: false,
+    queryHash: '3292C357',
+    planCacheShapeHash: '3292C357',
+    planCacheKey: '557069E9',
+    optimizationTimeMillis: 0,
+    maxIndexedOrSolutionsReached: false,
+    maxIndexedAndSolutionsReached: false,
+    maxScansToExplodeReached: false,
+    prunedSimilarIndexes: false,
+    winningPlan: {
+      isCached: false,
+      stage: 'FETCH',
+      inputStage: {
+        stage: 'IXSCAN',
+        keyPattern: { cust_id: 1, status: 1 },
+        indexName: 'cust_id_1_status_1',
+        isMultiKey: false,
+        multiKeyPaths: { cust_id: [], status: [] },
+        isUnique: false,
+        isSparse: false,
+        isPartial: false,
+        indexVersion: 2,
+        direction: 'forward',
+        indexBounds: { cust_id: [ '[123, 123]' ], status: [ '["A", "A"]' ] }
+      }
+    },
+    rejectedPlans: []
+  },
+  executionStats: {
+    executionSuccess: true,
+    nReturned: 1,
+    executionTimeMillis: 1,
+    totalKeysExamined: 1,
+    totalDocsExamined: 1,
+    executionStages: {
+      isCached: false,
+      stage: 'FETCH',
+      nReturned: 1,
+      executionTimeMillisEstimate: 0,
+      works: 2,
+      advanced: 1,
+      needTime: 0,
+      needYield: 0,
+      saveState: 0,
+      restoreState: 0,
+      isEOF: 1,
+      docsExamined: 1,
+      alreadyHasObj: 0,
+      inputStage: {
+        stage: 'IXSCAN',
+        nReturned: 1,
+        executionTimeMillisEstimate: 0,
+        works: 2,
+        advanced: 1,
+        needTime: 0,
+        needYield: 0,
+        saveState: 0,
+        restoreState: 0,
+        isEOF: 1,
+        keyPattern: { cust_id: 1, status: 1 },
+        indexName: 'cust_id_1_status_1',
+        isMultiKey: false,
+        multiKeyPaths: { cust_id: [], status: [] },
+        isUnique: false,
+        isSparse: false,
+        isPartial: false,
+        indexVersion: 2,
+        direction: 'forward',
+        indexBounds: { cust_id: [ '[123, 123]' ], status: [ '["A", "A"]' ] },
+        keysExamined: 1,
+        seeks: 1,
+        dupsTested: 0,
+        dupsDropped: 0
+      }
+    }
+  },
+  queryShapeHash: '4AC6F1461B5D99073764B43E85E0EB869A0D82DB7AC76D90E7C6DC6BCB7B8DCB',
+  command: {
+    find: 'orderinfo',
+    filter: { cust_id: 123, status: 'A' },
+    '$db': 'Institute'
+  },
+  serverInfo: {
+    host: 'DESKTOP-N7QVV5U',
+    port: 27017,
+    version: '8.2.1',
+    gitVersion: '3312bdcf28aa65f5930005e21c2cb130f648b8c3'
+  },
+  serverParameters: {
+    internalQueryFacetBufferSizeBytes: 104857600,
+    internalQueryFacetMaxOutputDocSizeBytes: 104857600,
+    internalLookupStageIntermediateDocumentMaxSizeBytes: 104857600,
+    internalDocumentSourceGroupMaxMemoryBytes: 104857600,
+    internalQueryMaxBlockingSortMemoryUsageBytes: 104857600,
+    internalQueryProhibitBlockingMergeOnMongoS: 0,
+    internalQueryMaxAddToSetBytes: 104857600,
+    internalDocumentSourceSetWindowFieldsMaxMemoryBytes: 104857600,
+    internalQueryFrameworkControl: 'trySbeRestricted',
+    internalQueryPlannerIgnoreIndexWithCollationForRegex: 1
+  },
+  ok: 1
+}
+Institute>
+
+Institute> db.orderinfo.aggregate([
+...   { $group: {
+...       _id: { cust_id: "$cust_id", status: "$status" },
+...       dups: { $addToSet: "$_id" },
+...       count: { $sum: 1 }
+...   }},
+...   { $match: { count: { $gt: 1 } } }
+... ]).forEach(function(doc) {
+...   doc.dups.shift(); // keep one
+...   db.orderinfo.deleteMany({ _id: { $in: doc.dups } });
+... });
+
+Institute>
+
+Institute> db.orderinfo.aggregate([
+...   { $group: { _id: "$status", avgPrice: { $avg: "$price" } } }
+... ])
+[ { _id: 'A', avgPrice: 270 }, { _id: 'B', avgPrice: 300 } ]
+Institute>
+
+Institute> db.orderinfo.updateMany(
+...   { status: "B" },
+...   { $set: { cust_name: "UpdatedName" } }
+... )
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 5,
+  modifiedCount: 5,
+  upsertedCount: 0
+}
+Institute>
